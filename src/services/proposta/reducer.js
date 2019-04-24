@@ -1,7 +1,8 @@
 import {
   FIND_SERVICOS_POR_TIPO_EVENTO,
   INSERIR_DADOS_PROPOSTA,
-  SELECIONAR_SERVICO
+  SELECIONAR_SERVICO,
+  APAGAR_DADOS_PROPOSTA
 } from './actionTypes';
 
 const initialState = {
@@ -23,6 +24,12 @@ export default function(state = initialState, action) {
         servicos: action.payload
       };
     case INSERIR_DADOS_PROPOSTA:
+      sessionStorage.setItem("dadosProposta", JSON.stringify(action.payload))
+      return {
+        ...state,
+        dadosProposta: action.payload
+      };
+    case APAGAR_DADOS_PROPOSTA:
       sessionStorage.setItem("dadosProposta", JSON.stringify(action.payload))
       return {
         ...state,

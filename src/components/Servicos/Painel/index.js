@@ -68,10 +68,10 @@ class Painel extends React.Component {
     const { expanded } = this.state;
     const selecaoServico = this.props.selecaoServico;
     if(this.props.dadosProposta != null) {
-      this.props.findServicosPorTipoEvento("festa-infantil", this.props.dadosProposta.numConvidados);
+      this.props.findServicosPorTipoEvento(this.props.dadosProposta.tipoEvento, this.props.dadosProposta.numConvidados);
       return (
         <React.Fragment>
-          <Grid container>
+          <Grid container spacing={16}>
             <Grid item md={12}>
             <div className={classes.root}>
               {this.state.sessoes.map(sessao => (
@@ -92,7 +92,7 @@ class Painel extends React.Component {
             </div>
             </Grid>
             <Grid item md={12}>
-              <Button variant="contained" onClick={this.handleResumo}>Resumo</Button>
+              <Button variant="outlined" color="primary" onClick={this.handleResumo}>Resumo</Button>
             </Grid>
           </Grid>
         </React.Fragment>

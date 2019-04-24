@@ -19,6 +19,9 @@ const styles = theme => ({
     height: 0,
     paddingTop: '56.25%', // 16:9
   },
+  botaoPular: {
+    textAlign: 'center'
+  },
 });
 
 class SelecaoServico extends React.Component {
@@ -43,40 +46,40 @@ class SelecaoServico extends React.Component {
     const { classes } = this.props;
     return (
       <React.Fragment>
-        <Grid container>
+        <Grid container spacing={16}>
           {this.props.servicos.map((serv) =>
             serv.secaoServicoId === this.props.secaoServico &&
-             <Grid item md key={serv._id.str}>
+             <Grid item md={4} key={serv._id.str}>
                 <Card key={serv._id.str} styles={classes.servico}>
-                  <CardHeader key={serv._id.str} title={serv.nome} className={classes.cardHeader}/>
-                  <CardMedia key={serv._id.str}
+                  <CardHeader title={serv.nome} className={classes.cardHeader}/>
+                  <CardMedia
                     className={classes.media}
                     image={require("../../../static/salmao.jpg")}
                     title="Salmao"
                   />
-                  <CardContent key={serv._id.str}>
-                    <Typography key={serv._id.str} variant="h4">R$ {serv.precoCalculado}</Typography>
-                    <Typography key={serv._id.str} variant="body1">{serv.desc}</Typography>
+                  <CardContent>
+                    <Typography  variant="h4">R$ {serv.precoCalculado}</Typography>
+                    <Typography variant="body1">{serv.desc}</Typography>
                     {serv.itens.map((i) =>
                       typeof i.qtde === 'undefined' ?
-                      <Typography key={i._id} variant="body2">{i}</Typography>
+                      <Typography variant="body2">{i}</Typography>
                       :
-                      <Typography key={i._id} variant="body2">{
+                      <Typography variant="body2">{
                         i.qtde + " " +
                         (i.item != null ? i.item.unidade : 'undefined') + " - " +
                         (i.item != null ? i.item.desc : "undefined")}
                       </Typography>
                     )}
                   </CardContent>
-                  <CardActions key={serv._id.str}>
-                    <Button key={serv._id.str} variant="contained"  onClick={(e) => this.handleOnSelect(serv, e)}>Selecionar</Button>
-                    <Button key={serv._id.str} variant="contained"  onClick={(e) => this.handleOnSelect(serv, e)}>Modificar</Button>
+                  <CardActions>
+                    <Button variant="outlined" color="primary" onClick={(e) => this.handleOnSelect(serv, e)}>Selecionar</Button>
+                    <Button variant="outlined" color="primary" onClick={(e) => this.handleOnSelect(serv, e)}>Modificar</Button>
                   </CardActions>
                 </Card>
               </Grid>
           )}
-          <Grid item md>
-            <Button variant="contained" onClick={this.handlePularSecao}>Pular essa seção</Button>
+          <Grid item md={12} className={classes.botaoPular}>
+            <Button variant="outlined" color="primary" onClick={this.handlePularSecao}>Pular essa seção</Button>
           </Grid>
         </Grid>
       </React.Fragment>

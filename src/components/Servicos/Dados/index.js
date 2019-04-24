@@ -8,7 +8,7 @@ import Grid from "@material-ui/core/Grid/Grid";
 import Button from "@material-ui/core/Button/Button";
 import PropTypes from "prop-types";
 import connect from "react-redux/es/connect/connect";
-import {findServicosPorTipoEvento, inserirDadosProposta, selecionarServico} from "../../../services/proposta/actions";
+import {apagarDadosProposta, inserirDadosProposta} from "../../../services/proposta/actions";
 import Select from "@material-ui/core/es/Select/Select";
 import OutlinedInput from "@material-ui/core/es/OutlinedInput/OutlinedInput";
 import InputLabel from "@material-ui/core/es/InputLabel/InputLabel";
@@ -21,6 +21,9 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
+  },
+  botaoAlterar: {
+    paddingTop: 200,
   },
   dense: {
     marginTop: 16,
@@ -55,9 +58,16 @@ const SignUpSchema = Yup.object().shape({
 
 class FormDados extends React.Component {
 
-  state = {
-    labelWidth: 0,
-  };
+  constructor(props) {
+    super(props);
+    this.handleAlterarDados = this.handleAlterarDados.bind(this);
+    this.state = {
+      labelWidth: 0,
+      dados: {
+
+      }
+    };
+  }
 
   componentDidMount() {
     this.setState({
@@ -66,11 +76,12 @@ class FormDados extends React.Component {
   }
 
   handleAlterarDados() {
-
+    this.props.apagarDadosProposta();
   }
 
   formDados() {
     const { classes } = this.props;
+    let { dados } = this.state;
     return (
       <React.Fragment>
         <Grid container spacing={16}>
@@ -83,7 +94,7 @@ class FormDados extends React.Component {
               nome: '',
               sobreNome: '',
               numConvidados: '',
-              tipoEvento: ''
+              tipoEvento: '',
             }}
             validationSchema={SignUpSchema}
             onSubmit={values => {
@@ -198,15 +209,15 @@ class FormDados extends React.Component {
                         }
                       >
                         <option value="" />
-                        <option value={"festa-infantil"}>Festa Infantil</option>
-                        <option value={"festa-adulto"}>Festa Adulto</option>
-                        <option value={"casamento"}>Casamento</option>
+                        <option value="festa-infantil">Festa Infantil</option>
+                        <option value="festa-adulto">Festa Adulto</option>
+                        <option value="casamento">Casamento</option>
                       </Select>
                     </FormControl>
                     <ErrorMessage name="tipoEvento" component="div" className="field-error"/>
                   </Grid>
 
-                  <Grid item md>
+                  <Grid item md className={classes.botaoAlterar}>
                     <Button type="submit" variant="outlined" color="primary" className={styles.button}>
                       Enviar
                     </Button>
@@ -285,12 +296,13 @@ class FormDados extends React.Component {
 }
 
 FormDados.propTypes = {
-  inserirDadosProposta: PropTypes.func.isRequired
+  inserirDadosProposta: PropTypes.func.isRequired,
+  apagarDadosProposta: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  dadosProposta: state.proposta.dadosProposta
+  dadosProposta: state.proposta.dadosProposta,
 });
 
 
-export default connect(mapStateToProps, { inserirDadosProposta })(withStyles(styles)(FormDados));
+export default connect(mapStateToProps, { inserirDadosProposta, apagarDadosProposta })(withStyles(styles)(FormDados));

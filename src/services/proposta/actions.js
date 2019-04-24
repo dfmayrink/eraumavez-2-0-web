@@ -1,7 +1,8 @@
 import {
   FIND_SERVICOS_POR_TIPO_EVENTO,
   INSERIR_DADOS_PROPOSTA,
-  SELECIONAR_SERVICO
+  SELECIONAR_SERVICO,
+  APAGAR_DADOS_PROPOSTA
 } from "./actionTypes";
 
 import axios from 'axios';
@@ -58,6 +59,13 @@ export const findServicosPorTipoEvento = (tipoEvento, numConvidados) =>  dispatc
       })
     );
 };
+
+export const apagarDadosProposta = () =>
+  ({
+    type: APAGAR_DADOS_PROPOSTA,
+    payload: null
+  })
+
 
 export const salvarEstimativa = (servicos) => dispatch => {
 
