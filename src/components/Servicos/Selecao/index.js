@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {selecionarServico, findServicosPorTipoEvento} from '../../../services/proposta/actions'
 import { withStyles } from '@material-ui/core/styles';
+import CardMedia from "@material-ui/core/es/CardMedia/CardMedia";
 
 const styles = theme => ({
   servico: {
@@ -14,16 +15,28 @@ const styles = theme => ({
   cardHeader: {
     backgroundColor: theme.palette.grey[200],
   },
+  media: {
+    height: 0,
+    paddingTop: '56.25%', // 16:9
+  },
 });
 
 class SelecaoServico extends React.Component {
   constructor(props) {
     super(props);
     this.handleOnSelect = this.handleOnSelect.bind(this);
+    this.handlePularSecao = this.handlePularSecao.bind(this);
   }
 
   handleOnSelect(serv, e) {
-    this.props.selecionarServico(serv, this.props.secaoServico)
+    this.props.selecionarServico(serv, this.props.secaoServico);
+    if(this.props.changePanel != null)
+      this.props.changePanel();
+  }
+
+  handlePularSecao() {
+    if(this.props.changePanel != null)
+      this.props.changePanel();
   }
 
   render() {
@@ -34,16 +47,21 @@ class SelecaoServico extends React.Component {
           {this.props.servicos.map((serv) =>
             serv.secaoServicoId === this.props.secaoServico &&
              <Grid item md key={serv._id.str}>
-                <Card key={serv._id.str} styles={classes.servico} onClick={(e) => this.handleOnSelect(serv, e)}>
+                <Card key={serv._id.str} styles={classes.servico}>
                   <CardHeader key={serv._id.str} title={serv.nome} className={classes.cardHeader}/>
+                  <CardMedia key={serv._id.str}
+                    className={classes.media}
+                    image={require("../../../static/salmao.jpg")}
+                    title="Salmao"
+                  />
                   <CardContent key={serv._id.str}>
-                    <Typography variant="h4">R$ {serv.precoCalculado}</Typography>
-                    <Typography variant="body1">{serv.desc}</Typography>
+                    <Typography key={serv._id.str} variant="h4">R$ {serv.precoCalculado}</Typography>
+                    <Typography key={serv._id.str} variant="body1">{serv.desc}</Typography>
                     {serv.itens.map((i) =>
                       typeof i.qtde === 'undefined' ?
-                      <Typography  variant="body2">{i}</Typography>
+                      <Typography key={i._id} variant="body2">{i}</Typography>
                       :
-                      <Typography variant="body2">{
+                      <Typography key={i._id} variant="body2">{
                         i.qtde + " " +
                         (i.item != null ? i.item.unidade : 'undefined') + " - " +
                         (i.item != null ? i.item.desc : "undefined")}
@@ -51,11 +69,15 @@ class SelecaoServico extends React.Component {
                     )}
                   </CardContent>
                   <CardActions key={serv._id.str}>
-                    <Button key={serv._id.str} variant="contained">Selecionar</Button>
+                    <Button key={serv._id.str} variant="contained"  onClick={(e) => this.handleOnSelect(serv, e)}>Selecionar</Button>
+                    <Button key={serv._id.str} variant="contained"  onClick={(e) => this.handleOnSelect(serv, e)}>Modificar</Button>
                   </CardActions>
                 </Card>
               </Grid>
           )}
+          <Grid item md>
+            <Button variant="contained" onClick={this.handlePularSecao}>Pular essa seção</Button>
+          </Grid>
         </Grid>
       </React.Fragment>
     );
@@ -64,7 +86,6 @@ class SelecaoServico extends React.Component {
 
 SelecaoServico.propTypes = {
   selecionarServico: PropTypes.func.isRequired,
-  findServicosPorTipoEvento: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

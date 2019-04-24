@@ -5,6 +5,7 @@ import totalReducer from './total/reducer';
 import filtersReducer from './filters/reducer';
 import sortReducer from './sort/reducer';
 import propostaReducer from './proposta/reducer'
+import authReducer from './auth/reducer'
 
 export default combineReducers({
   shelf: shelfReducer,
@@ -12,5 +13,6 @@ export default combineReducers({
   total: totalReducer,
   filters: filtersReducer,
   sort: sortReducer,
-  proposta: propostaReducer
+  proposta: propostaReducer,
+  auth : authReducer,
 });

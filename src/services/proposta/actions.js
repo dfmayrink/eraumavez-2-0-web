@@ -4,6 +4,8 @@ import {
   SELECIONAR_SERVICO
 } from "./actionTypes";
 
+import axios from 'axios';
+
 export const selecionarServico = (postData, servico)  =>
   // fetch('http://localhost:8080/selecionarServico/' + servico, {
   //   method: 'POST',
@@ -56,3 +58,7 @@ export const findServicosPorTipoEvento = (tipoEvento, numConvidados) =>  dispatc
       })
     );
 };
+
+export const salvarEstimativa = (servicos) => dispatch => {
+
+}

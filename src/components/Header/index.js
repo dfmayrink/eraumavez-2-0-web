@@ -1,5 +1,6 @@
 import React from 'react';
-import {Link} from 'react-router-dom'
+import {Route, Link} from 'react-router-dom'
+import { loadCSS } from 'fg-loadcss/src/loadCSS';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -18,6 +19,9 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import SignOutButton from '../SignOut';
+import * as ROUTES from '../../constants/routes';
+
 
 const styles = theme => ({
   root: {
@@ -95,6 +99,13 @@ class Header extends React.Component {
     mobileMoreAnchorEl: null,
   };
 
+  componentDidMount() {
+    loadCSS(
+      'https://use.fontawesome.com/releases/v5.1.0/css/all.css',
+      document.querySelector('#insertion-point-jss'),
+    );
+  }
+
   handleProfileMenuOpen = event => {
     this.setState({ anchorEl: event.currentTarget });
   };
@@ -126,8 +137,10 @@ class Header extends React.Component {
         open={isMenuOpen}
         onClose={this.handleMenuClose}
       >
+        <Link to={ROUTES.SIGN_IN}><MenuItem onClick={this.handleMenuClose}>Login</MenuItem></Link>
         <MenuItem onClick={this.handleMenuClose}>Perfil</MenuItem>
         <MenuItem onClick={this.handleMenuClose}>Minha conta</MenuItem>
+        <SignOutButton><MenuItem onClick={this.handleMenuClose}>Sair</MenuItem></SignOutButton>
       </Menu>
     );
 
@@ -171,7 +184,7 @@ class Header extends React.Component {
             <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
               <MenuIcon />
             </IconButton>
-            <Button component={Link} to="/">Era Uma Vez</Button>
+            <Button component={Link} to={ROUTES.LANDING}>Era Uma Vez</Button>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
@@ -186,11 +199,13 @@ class Header extends React.Component {
             </div>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              <IconButton color="inherit">
-                <Badge badgeContent={5} color="secondary">
-                  <MailIcon />
-                </Badge>
-              </IconButton>
+              <Link to={ROUTES.ESTIMATIVA}>
+                <IconButton color="inherit" >
+                  <Badge badgeContent={5} color="secondary">
+                    <MailIcon/>
+                  </Badge>
+                </IconButton>
+              </Link>
               <IconButton color="inherit">
                 <Badge badgeContent={18} color="secondary">
                   <NotificationsIcon />

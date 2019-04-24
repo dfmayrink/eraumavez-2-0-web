@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import TextField from '@material-ui/core/TextField';
@@ -8,6 +9,10 @@ import Button from "@material-ui/core/Button/Button";
 import PropTypes from "prop-types";
 import connect from "react-redux/es/connect/connect";
 import {findServicosPorTipoEvento, inserirDadosProposta, selecionarServico} from "../../../services/proposta/actions";
+import Select from "@material-ui/core/es/Select/Select";
+import OutlinedInput from "@material-ui/core/es/OutlinedInput/OutlinedInput";
+import InputLabel from "@material-ui/core/es/InputLabel/InputLabel";
+import FormControl from "@material-ui/core/es/FormControl/FormControl";
 
 const styles = theme => ({
   button: {
@@ -43,60 +48,79 @@ const SignUpSchema = Yup.object().shape({
     .required('Sobrenome obrigatório'),
   numConvidados: Yup.number()
     .positive('O número de convidados deve ser maior que zero')
-    .required('Número de convidados obrigatório')
+    .required('Número de convidados obrigatório'),
+  tipoEvento: Yup.string()
+  .required("Informe qual será seu evento")
 });
 
 class FormDados extends React.Component {
-  render() {
+
+  state = {
+    labelWidth: 0,
+  };
+
+  componentDidMount() {
+    this.setState({
+      labelWidth: ReactDOM.findDOMNode(this.InputLabelRef) ? ReactDOM.findDOMNode(this.InputLabelRef).offsetWidth : 0,
+    });
+  }
+
+  handleAlterarDados() {
+
+  }
+
+  formDados() {
+    const { classes } = this.props;
     return (
       <React.Fragment>
         <Grid container spacing={16}>
           <Grid item xs={12}>
             <h2>Informe seus dados para a proposta</h2>
           </Grid>
-            <Formik
-              initialValues={{
-                email: '',
-                nome: '',
-                sobreNome: '',
-                numConvidados: ''
-              }}
-              validationSchema={SignUpSchema}
-              onSubmit={values => {
-                setTimeout(() => {
-                  this.props.inserirDadosProposta(values)
-                }, 500);
-              }}
-              render={({values, handleChange, handleBlur, errors, touched}) => (
-                <Grid item xs={12}>
-                  <Form>
-                    <Grid item md>
-                      <Grid item>
-                        <TextField
-                          error={errors.nome && touched.nome}
-                          id="outlined-nome-input"
-                          label="Nome"
-                          className={styles.textField}
-                          type="text"
-                          name="nome"
-                          autoComplete="nome"
-                          margin="normal"
-                          variant="outlined"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.nome}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <ErrorMessage
-                          name="nome"
-                          component="div"
-                          className="field-error"
-                        />
-                      </Grid>
+          <Formik
+            initialValues={{
+              email: '',
+              nome: '',
+              sobreNome: '',
+              numConvidados: '',
+              tipoEvento: ''
+            }}
+            validationSchema={SignUpSchema}
+            onSubmit={values => {
+              setTimeout(() => {
+                this.props.inserirDadosProposta(values)
+              }, 500);
+            }}
+            render={({values, handleChange, handleBlur, errors, touched}) => (
+              <Grid item xs={12}>
+                <Form>
+                  <Grid item md>
+                    <Grid item>
+                      <TextField
+                        error={errors.nome && touched.nome}
+                        id="outlined-nome-input"
+                        label="Nome"
+                        className={styles.textField}
+                        type="text"
+                        name="nome"
+                        autoComplete="nome"
+                        margin="normal"
+                        variant="outlined"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.nome}
+                      />
                     </Grid>
+                    <Grid item>
+                      <ErrorMessage
+                        name="nome"
+                        component="div"
+                        className="field-error"
+                      />
+                    </Grid>
+                  </Grid>
 
-                    <Grid item md>
+                  <Grid item md>
                     <TextField
                       error={errors.sobreNome && touched.sobreNome}
                       id="outlined-sobrenome-input"
@@ -112,9 +136,9 @@ class FormDados extends React.Component {
                       value={values.sobreNome}
                     />
                     <ErrorMessage name="sobreNome" component="div" className="field-error"/>
-                    </Grid>
+                  </Grid>
 
-                    <Grid item md>
+                  <Grid item md>
                     <TextField
                       error={errors.email && touched.email}
                       id="outlined-email-input"
@@ -130,9 +154,9 @@ class FormDados extends React.Component {
                       value={values.email}
                     />
                     <ErrorMessage name="email" component="div" className="field-error"/>
-                    </Grid>
+                  </Grid>
 
-                    <Grid item md>
+                  <Grid item md>
                     <TextField
                       error={errors.numConvidados && touched.numConvidados}
                       id="outlined-numcomvidados-input"
@@ -148,20 +172,115 @@ class FormDados extends React.Component {
                       value={values.numConvidados}
                     />
                     <ErrorMessage name="numConvidados" component="div" className="field-error"/>
-                    </Grid>
+                  </Grid>
+                  <Grid item md>
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel
+                        ref={ref => {
+                          this.InputLabelRef = ref;
+                        }}
+                        htmlFor="outlined-tipoEvento-native-simple"
+                      >
+                        Tipo Evento
+                      </InputLabel>
+                      <Select
+                        error={errors.tipoEvento && touched.tipoEvento}
+                        native
+                        value={values.tipoEvento}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        input={
+                          <OutlinedInput
+                            name="tipoEvento"
+                            labelWidth={this.state.labelWidth}
+                            id="outlined-tipoEvento-native-simple"
+                          />
+                        }
+                      >
+                        <option value="" />
+                        <option value={"festa-infantil"}>Festa Infantil</option>
+                        <option value={"festa-adulto"}>Festa Adulto</option>
+                        <option value={"casamento"}>Casamento</option>
+                      </Select>
+                    </FormControl>
+                    <ErrorMessage name="tipoEvento" component="div" className="field-error"/>
+                  </Grid>
 
-                    <Grid item md>
-                      <Button type="submit" variant="outlined" color="primary" className={styles.button}>
-                        Enviar
-                      </Button>
-                    </Grid>
-                  </Form>
-                </Grid>
-              )}
-            />
+                  <Grid item md>
+                    <Button type="submit" variant="outlined" color="primary" className={styles.button}>
+                      Enviar
+                    </Button>
+                  </Grid>
+                </Form>
+              </Grid>
+            )}
+          />
         </Grid>
       </React.Fragment>
-    )
+    );
+  }
+
+  informacoes() {
+    const { classes, dadosProposta } = this.props;
+    return (
+      <React.Fragment>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Nome"
+          defaultValue={dadosProposta.nome}
+          className={classes.textField}
+          margin="normal"
+          variant="outlined"
+        />
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Sobrenome"
+          defaultValue={dadosProposta.sobreNome}
+          className={classes.textField}
+          margin="normal"
+          variant="outlined"
+        />
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Email"
+          defaultValue={dadosProposta.email}
+          className={classes.textField}
+          margin="normal"
+          variant="outlined"
+        />
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Número de convidados"
+          defaultValue={dadosProposta.numConvidados}
+          className={classes.textField}
+          margin="normal"
+          variant="outlined"
+        />
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Tipo de Evento"
+          defaultValue={dadosProposta.tipoEvento}
+          className={classes.textField}
+          margin="normal"
+          variant="outlined"
+        />
+        <Button variant="outlined" onClick={this.handleAlterarDados} color="primary">
+          Alterar Dados
+        </Button>
+      </React.Fragment>
+      );
+  }
+
+  render() {
+    if(this.props.dadosProposta == null)
+      return this.formDados();
+    else
+      return this.informacoes();
   }
 }
 

@@ -1,5 +1,4 @@
 import {
-  SELECIONAR_DECORACAO,
   FIND_SERVICOS_POR_TIPO_EVENTO,
   INSERIR_DADOS_PROPOSTA,
   SELECIONAR_SERVICO
@@ -8,6 +7,7 @@ import {
 const initialState = {
   selecaoServico: {},
   servicos: [],
+  dadosProposta: JSON.parse(sessionStorage.getItem("dadosProposta"))
 };
 
 export default function(state = initialState, action) {
@@ -23,6 +23,7 @@ export default function(state = initialState, action) {
         servicos: action.payload
       };
     case INSERIR_DADOS_PROPOSTA:
+      sessionStorage.setItem("dadosProposta", JSON.stringify(action.payload))
       return {
         ...state,
         dadosProposta: action.payload
