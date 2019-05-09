@@ -27,6 +27,9 @@ const styles = theme => ({
     fontSize: theme.typography.pxToRem(15),
     color: theme.palette.text.secondary,
   },
+  botaoResumo: {
+    textAlign: 'right'
+  },
 });
 
 class Painel extends React.Component {
@@ -34,8 +37,8 @@ class Painel extends React.Component {
     expanded: null,
     abaAberta: 1,
     numAbas: 4,
-    sessoes: [{id: 1, sessao: "decoracao", desc: "Decoração"}, {id:2, sessao: "buffet", desc: "Buffet"},
-      {id:3, sessao: "recreacao", desc: "Recreação"}, {id:4, sessao: "mobiliario", desc: "Mobiliário"}],
+    secoes: [{id: 1, secao: "decoracao", desc: "Decoração"}, {id:2, secao: "buffet", desc: "Buffet"},
+      {id:3, secao: "recreacao", desc: "Recreação"}, {id:4, secao: "mobiliario", desc: "Mobiliário"}],
   };
 
   constructor(props) {
@@ -49,6 +52,12 @@ class Painel extends React.Component {
       expanded: ('panel' + abaAberta),
       abaAberta: abaAberta
     })
+  }
+
+  componentWillMount() {
+    const {dadosProposta} = this.props;
+    if(dadosProposta != null)
+      this.props.findServicosPorTipoEvento(dadosProposta.tipoEvento, dadosProposta.numConvidados);
   }
 
   handleChange = panel => (event, expanded) => {
@@ -66,32 +75,32 @@ class Painel extends React.Component {
   render() {
     const { classes } = this.props;
     const { expanded } = this.state;
-    const selecaoServico = this.props.selecaoServico;
-    if(this.props.dadosProposta != null) {
-      this.props.findServicosPorTipoEvento(this.props.dadosProposta.tipoEvento, this.props.dadosProposta.numConvidados);
+    const { selecaoServico , dadosProposta }  = this.props;
+    if(dadosProposta != null) {
       return (
         <React.Fragment>
           <Grid container spacing={16}>
             <Grid item md={12}>
             <div className={classes.root}>
-              {this.state.sessoes.map(sessao => (
-                <ExpansionPanel key={sessao.id} expanded={expanded === "panel" + sessao.id} onChange={this.handleChange(sessao.id)}>
+              {this.state.secoes.map(secao => (
+                <ExpansionPanel key={secao.id} expanded={expanded === "panel" + secao.id} onChange={this.handleChange(secao.id)}>
                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                    <Typography className={classes.heading}>{sessao.desc}</Typography>
+                    <Typography className={classes.heading}>{secao.desc}</Typography>
                     <Typography className={classes.secondaryHeading}>
-                      {!!selecaoServico[sessao.sessao] &&
-                      (selecaoServico[sessao.sessao].nome + " R$ " + selecaoServico[sessao.sessao].precoCalculado)}
+                      {!!dadosProposta.servicosSelecionados[secao.secao] &&
+                      (dadosProposta.servicosSelecionados[secao.secao].nome + " R$ " +
+                        dadosProposta.servicosSelecionados[secao.secao].precoCalculado.toFixed(2))}
                     </Typography>
                   </ExpansionPanelSummary>
                   <ExpansionPanelDetails>
-                    <SelecaoServico secaoServico={sessao.sessao} changePanel={this.changePanel}/>
+                    <SelecaoServico categoria={secao.secao} changePanel={this.changePanel}/>
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
                 )
               )}
             </div>
             </Grid>
-            <Grid item md={12}>
+            <Grid item md={12} className={classes.botaoResumo}>
               <Button variant="outlined" color="primary" onClick={this.handleResumo}>Resumo</Button>
             </Grid>
           </Grid>

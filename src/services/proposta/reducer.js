@@ -14,9 +14,10 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case SELECIONAR_SERVICO:
+      sessionStorage.setItem("dadosProposta", JSON.stringify(action.payload))
       return {
         ...state,
-        selecaoServico: Object.assign({}, state.selecaoServico, action.payload)
+        dadosProposta: action.payload
       };
     case FIND_SERVICOS_POR_TIPO_EVENTO:
       return {
